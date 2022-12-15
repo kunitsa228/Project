@@ -8,17 +8,14 @@
 #include <stdlib.h>
 
 
-void tabulation(char name1[10][10], char name12[10][10], char name14[10][10], int final[2], int arr12[2], int arr14[4], int p1, int p2);
 void table(int array[8][4], char name[10][10]);
-void sort(int array[8][4], char name[10][10], int final[2], int arr12[2], int arr14[4], char name1[10][10], char name12[10][10], char name14[10][10]);
-void minisort(char name[10][10], int arr[8], int size);
+char sort(int array[8][4], int arr[10], char name[10][10], int start, int end);
+void minisort(char name[10][10], int arr[10], int start, int end);
 int best(int array[8][4], char name[10][10], int new_char[10], int j);
 int worst(int array[8][4], char name[10][10], int new_char[10], int j);
 
 void main() {
 	system("chcp 1251");
-	int end = 0;
-
 	int array[8][4] = {
 	{ 2, 0, 0, 0},
 	{ 6, 3, 0, 0},
@@ -39,34 +36,37 @@ void main() {
 	{"В1"}, // 7
 	{"Б1"}, // 8
 	};
-	int arr14[8], arr12[4], final[2];
-	int new_char[10];
 
-	char name1[10][10], name12[10][10], name14[10][10];
-	int cnt = 0, z = 0, x, y;
+	int new_char[10];
+	int arr[10];
+
+	int z = 0, end = 0, x, y;
 	while (end != 4) {
-		puts("\nВыберите пункт из списка:");
-		puts("1. Вывод промежуточной таблицы");
-		puts("2. Вывод игроков с заданными местами по заданному диапазону мест");
-		puts("3. Вывод лучшего/медианного/худшего игрока в выбранном этапе турнира");
+		puts("\nТурнирная таблица по карате, выведение итоговых мест и лучших/худших игроков турнира в заданом этапе.");
+		puts("Выберите пункт из списка:");
+		puts("1. Вывод промежуточной таблицы;");
+		puts("2. Вывод игроков с заданными местами по заданному диапазону мест;");
+		puts("3. Вывод лучшего/худшего игрока в выбранном этапе турнира;");
+		puts("4. Закончить работу с программой.");
 		scanf("%d", &end);
 		switch (end) {
 		case 1:
+			system("cls");
 			table(array, name);
 			break;
 
 		case 2:
-			sort(array, name, final, arr12, arr14, name1, name12, name14);
+			system("cls");
 			puts("Введите диапазон вывода мест");
 			puts("Старт: ");
 			scanf("%d", &x);
 			puts("Конец: ");
 			scanf("%d", &y);
-			tabulation(name1, name12, name14, final, arr12, arr14, x, y);
+			sort(array, arr, name, x - 1, y);
 			break;
 
 		case 3:
-			sort(array, name, final, arr12, arr14, name1, name12, name14);
+			system("cls");
 			puts("\nВыберите этап турнира");
 			puts("1. 1/4");
 			puts("2. 1/2");
@@ -74,23 +74,18 @@ void main() {
 			scanf("%d", &z);
 			switch (z) {
 			case 1:
-				x = best(array, name, new_char, 0);
-				printf("Лучший игрок %s набрал %d баллов\n", new_char, x);
-				y = worst(array, name, new_char, 0);
-				printf("Худший игрок %s набрал %d баллов\n", new_char, y);
+				printf("Лучший игрок %s набрал %d баллов\n", new_char, best(array, name, new_char, 0));
+				printf("Худший игрок %s набрал %d баллов\n", new_char, worst(array, name, new_char, 0));
 				break;
 
 			case 2:
-				x = best(array, name, new_char, 1);
-				printf("Лучший игрок %s набрал %d баллов\n", new_char, x);
-				y = worst(array, name, new_char, 1);
-				printf("Худший игрок %s набрал %d баллов\n", new_char, y);
+				printf("Лучший игрок %s набрал %d баллов\n", new_char, best(array, name, new_char, 1));
+				printf("Худший игрок %s набрал %d баллов\n", new_char, worst(array, name, new_char, 1));
 				break;
 
 			case 3:
-
-				printf("Лучший игрок %s набрал %d баллов\n", name1[0], final[0]);
-				printf("Худший игрок %s набрал %d баллов\n", name1[1], final[1]);
+				printf("Лучший игрок %s набрал %d баллов\n", new_char, best(array, name, new_char, 2));
+				printf("Худший игрок %s набрал %d баллов\n", new_char, worst(array, name, new_char, 2));
 				break;
 			}
 			break;
@@ -128,19 +123,19 @@ void table(int array[8][4], char name[10][10]) {
 }
 
 // частичная сортировка для вывода
-void minisort(char name[10][10], int arr[8], int size) {
+void minisort(char new_name[10][10], int arr[100], int start, int end) {
 	int temp;
 	char line[12];
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size - 1; j++) {
+	for (int i = start; i < end; i++) {
+		for (int j = start; j < end - 1; j++) {
 			if (arr[j] < arr[j + 1]) {
 				temp = arr[j];
 				arr[j] = arr[j + 1];
 				arr[j + 1] = temp;
 
-				strcpy(line, name[j]);
-				strcpy(name[j], name[j + 1]);
-				strcpy(name[j + 1], line);
+				strcpy(line, new_name[j]);
+				strcpy(new_name[j], new_name[j + 1]);
+				strcpy(new_name[j + 1], line);
 			}
 		}
 	}
@@ -148,56 +143,40 @@ void minisort(char name[10][10], int arr[8], int size) {
 }
 
 // сортировка по местам (функция 2)
-void sort(int array[8][4], char name[10][10], int final[2], int arr12[2], int arr14[4], char name1[10][10], char name12[10][10], char name14[10][10]) {
-	int count12 = 0, count14 = 0;
+char sort(int array[8][4], int arr[10], char name[10][10], int start, int end) {
+	int count = 0;
+	char new_name[10][10];
 	for (int i = 0; i < 8; i++) {
-		// 1 место
-		if (array[i][3] != 0) {
-			final[0] = array[i][2];
-			strcpy(name1[0], name[i]);
-		}
-		// 2 место
-		else if ((array[i][3] == 0) && (array[i][2] != 0)) {
-			final[1] = array[i][2];
-			strcpy(name1[1], name[i]);
-		}
-
-
-		// 3-4 место
-		else if ((array[i][2] == 0) && (array[i][1] != 0)) {
-			arr12[count12] = array[i][1];
-			strcpy(name12[count12], name[i]);
-			count12++;
-			if (count12 == 2) minisort(name12, arr12, 2);
-		}
-
-		// 5-8 место
-		else if ((array[i][1] == 0) && (array[i][0] != 0)) {
-			arr14[count14] = array[i][0];
-			strcpy(name14[count14], name[i]);
-			count14++;
-			if (count14 == 4) minisort(name14, arr14, 4);
+		if (array[i][2] != 0) {
+			arr[count] = array[i][2];
+			strcpy(new_name[count], name[i]);
+			count++;
 		}
 	}
-	minisort(name1, final, 2);
+
+	for (int i = 0; i < 8; i++) {
+		if ((array[i][1] != 0) && (array[i][2] == 0)) {
+			arr[count] = array[i][1];
+			strcpy(new_name[count], name[i]);
+			count++;
+		}
+	}
+
+	for (int i = 0; i < 8; i++) {
+		if ((array[i][0] != 0) && (array[i][1] == 0)) {
+			arr[count] = array[i][0];
+			strcpy(new_name[count], name[i]);
+			count++;
+		}
+	}
+	minisort(new_name, arr, 0, 2);
+	minisort(new_name, arr, 2, 4);
+	minisort(new_name, arr, 4, 8);
+
+	for (int i = start; i < end; i++)
+		printf("Место %d занял игрок %s с %d баллами\n", i + 1, new_name[i], arr[i]);
 }
 
-// вывод мест по диапазону
-void tabulation(char name1[10][10], char name12[10][10], char name14[10][10], int final[2], int arr12[2], int arr14[4], int p1, int p2) {
-	char tname[15][15];
-	for (int i = 0; i < 2; i++) {
-		strcpy(tname[i], name1[i]);
-	}
-	for (int i = 0; i < 2; i++) {
-		strcpy(tname[i + 2], name12[i]);
-	}
-	for (int i = 0; i < 4; i++) {
-		strcpy(tname[i + 4], name14[i]);
-	}
-	for (int i = p1 - 1; i < p2; i++) {
-		printf("Место %d занял игрок %s\n", i + 1, tname[i]);
-	}
-}
 
 // нахождение лучшего игрока в каком-то этапе
 int best(int array[8][4], char name[10][10], int new_char[10], int j) {
