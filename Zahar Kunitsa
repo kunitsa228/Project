@@ -1,5 +1,10 @@
+//Можете пожалуйста напомнить, что мне нужно поменять?
+
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
+#define SIZE_NAME 8
+#define TABLE_LINE 8
+#define NABLE_COLUMN 4
 
 #include <stdio.h>
 #include <locale.h>
@@ -8,15 +13,15 @@
 #include <stdlib.h>
 
 
-void table(int array[8][4], char name[10][10]);
-char sort(int array[8][4], int arr[10], char name[10][10], int start, int end);
-void minisort(char name[10][10], int arr[10], int start, int end);
-int best(int array[8][4], char name[10][10], int new_char[10], int j);
-int worst(int array[8][4], char name[10][10], int new_char[10], int j);
+void table(int array[TABLE_LINE][NABLE_COLUMN], char name[SIZE_NAME][SIZE_NAME]);
+char sort(int array[TABLE_LINE][NABLE_COLUMN], int arr[10], char name[SIZE_NAME][SIZE_NAME], int start, int end);
+void minisort(char name[SIZE_NAME][SIZE_NAME], int arr[10], int start, int end);
+int best(int array[TABLE_LINE][NABLE_COLUMN], char name[SIZE_NAME][SIZE_NAME], int new_char[10], int j);
+int worst(int array[TABLE_LINE][NABLE_COLUMN], char name[SIZE_NAME][SIZE_NAME], int new_char[10], int j);
 
 void main() {
 	system("chcp 1251");
-	int array[8][4] = {
+	int array[TABLE_LINE][NABLE_COLUMN] = {
 	{ 2, 0, 0, 0},
 	{ 6, 3, 0, 0},
 	{ 2, 0, 0, 0},
@@ -26,7 +31,7 @@ void main() {
 	{ 7, 8, 5, 1},
 	{ 4, 0, 0, 0}
 	};
-	char name[10][10] = {
+	char name[SIZE_NAME][SIZE_NAME] = {
 	{"A1"}, // 1
 	{"B2"}, // 2
 	{"Б2"}, // 3
@@ -94,7 +99,7 @@ void main() {
 }
 
 // турнирная таблица
-void table(int array[8][4], char name[10][10]) {
+void table(int array[TABLE_LINE][NABLE_COLUMN], char name[SIZE_NAME][SIZE_NAME]) {
 	printf("|------------|-----|\n");
 	printf("| %s         | %d   |\n", name[0], array[0][0]);
 	printf("|------------|-----|-----|\n");
@@ -123,7 +128,7 @@ void table(int array[8][4], char name[10][10]) {
 }
 
 // частичная сортировка для вывода
-void minisort(char new_name[10][10], int arr[100], int start, int end) {
+void minisort(char new_name[SIZE_NAME][SIZE_NAME], int arr[10], int start, int end) {
 	int temp;
 	char line[12];
 	for (int i = start; i < end; i++) {
@@ -143,9 +148,9 @@ void minisort(char new_name[10][10], int arr[100], int start, int end) {
 }
 
 // сортировка по местам (функция 2)
-char sort(int array[8][4], int arr[10], char name[10][10], int start, int end) {
+char sort(int array[TABLE_LINE][NABLE_COLUMN], int arr[10], char name[SIZE_NAME][SIZE_NAME], int start, int end) {
 	int count = 0;
-	char new_name[10][10];
+	char new_name[SIZE_NAME][SIZE_NAME];
 	for (int i = 0; i < 8; i++) {
 		if (array[i][2] != 0) {
 			arr[count] = array[i][2];
@@ -179,7 +184,7 @@ char sort(int array[8][4], int arr[10], char name[10][10], int start, int end) {
 
 
 // нахождение лучшего игрока в каком-то этапе
-int best(int array[8][4], char name[10][10], int new_char[10], int j) {
+int best(int array[TABLE_LINE][NABLE_COLUMN], char name[SIZE_NAME][SIZE_NAME], int new_char[10], int j) {
 	int maxx = 0;
 	for (int i = 0; i < 8; i++) {
 		if (array[i][j] > maxx) {
@@ -192,7 +197,7 @@ int best(int array[8][4], char name[10][10], int new_char[10], int j) {
 }
 
 // нахождение худшего игрока в каком-то этапе
-int worst(int array[8][4], char name[10][10], int new_char[10], int j) {
+int worst(int array[TABLE_LINE][NABLE_COLUMN], char name[SIZE_NAME][SIZE_NAME], int new_char[10], int j) {
 	int minx = 10;
 	for (int i = 0; i < 8; i++) {
 		if ((array[i][j] < minx) && (array[i][j] != 0)) {
